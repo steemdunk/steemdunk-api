@@ -3,6 +3,9 @@ yarn.lock
 node_modules/
 lib/
 
+ormconfig.overrides*.js
+!ormconfig.overrides.sample.js
+
 .vscode/launch.json
 .vscode/tasks.json
 .DS_Store
