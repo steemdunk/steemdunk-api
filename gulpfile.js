@@ -24,8 +24,8 @@ gulp.task('build', () => {
   return merge(js, dts);
 });
 
-gulp.task('watch', ['build'], () => {
-  return gulp.watch(src, ['build']);
+gulp.task('watch', gulp.series(['build']), () => {
+  return gulp.watch(src, gulp.series(['build']));
 });
 
 gulp.task('clean', () => {
