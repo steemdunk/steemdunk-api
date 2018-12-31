@@ -1,13 +1,7 @@
 import 'reflect-metadata';
-import { LoggerFactory } from './logger-factory';
+import { LoggerFactory } from 'steemdunk-common';
 import { db } from './db';
 
-export * from './logger-factory';
-export * from './payment';
-export * from './config';
-export * from './util';
-export * from './lock';
-export * from './sc2';
 export * from './db';
 
 const LOGGER = LoggerFactory.create('db_initializer');

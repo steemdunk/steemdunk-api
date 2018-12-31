@@ -16,9 +16,6 @@
     "src",
     "lib"
   ],
-  "browser": {
-    "./lib/index.js": "./lib/index-browser.js"
-  },
   "types": "./lib/index.d.ts",
   "dependencies": {
     "chalk": "^2.4.1",
@@ -27,6 +24,7 @@
     "pg": "^7.4.3",
     "reflect-metadata": "^0.1.12",
     "superagent": "^4.0.0-beta.5",
+    "steemdunk-common": "git+https://github.com/steemdunk/steemdunk-common.git#3f36036",
     "typeorm": "^0.2.7"
   },
   "devDependencies": {

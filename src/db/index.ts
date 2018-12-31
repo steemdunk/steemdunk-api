@@ -8,7 +8,7 @@ export * from './entity/vote_log';
 export * from './entity/vote_task';
 export * from './error_codes';
 
-import { LoggerFactory } from '../logger-factory';
+import { LoggerFactory } from 'steemdunk-common';
 import { createConnection } from 'typeorm';
 import { Session } from './entity/session';
 import { VoteLog } from './entity/vote_log';

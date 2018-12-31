@@ -4,7 +4,7 @@ import {
   Column,
   Entity
 } from 'typeorm';
-import { Plan } from '../../payment';
+import { Plan } from 'steemdunk-common';
 
 @Entity()
 export class Premium extends BaseEntity {
