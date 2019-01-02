@@ -8,7 +8,8 @@
   "scripts": {
     "prepare": "npm run build",
     "build": "gulp build",
-    "test": "cross-env NODE_ENV=TEST npx mocha -r ts-node/register test/index.ts"
+    "test": "cross-env NODE_ENV=TEST npx mocha -r ts-node/register test/index.ts",
+    "start": "node ./lib/start.js"
   },
   "files": [
     "tsconfig.json",
@@ -18,18 +19,23 @@
   ],
   "types": "./lib/index.d.ts",
   "dependencies": {
+    "apollo-server-koa": "^2.3.1",
     "chalk": "^2.4.1",
     "debug": "^4.1.0",
+    "graphql": "^14.0.2",
+    "koa": "^2.6.2",
     "loglevel": "^1.6.1",
     "pg": "^7.4.3",
     "reflect-metadata": "^0.1.12",
-    "superagent": "^4.0.0-beta.5",
     "steemdunk-common": "git+https://github.com/steemdunk/steemdunk-common.git#3f36036",
+    "superagent": "^4.0.0-beta.5",
+    "type-graphql": "^0.16.0",
     "typeorm": "^0.2.7"
   },
   "devDependencies": {
     "@types/chai": "^4.1.4",
     "@types/debug": "0.0.31",
+    "@types/koa": "^2.0.47",
     "@types/loglevel": "^1.5.3",
     "@types/mocha": "^5.2.2",
     "@types/node": "^10.12.1",

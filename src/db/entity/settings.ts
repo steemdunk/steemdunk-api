@@ -5,24 +5,17 @@ import {
   Entity,
   Check,
 } from 'typeorm';
+import { ObjectType, Field } from 'type-graphql';
 
 @Entity()
 @Check(`id = true`)
+@ObjectType()
 export class Settings extends BaseEntity {
 
   @PrimaryColumn({ default: true })
   id!: boolean;
 
   @Column('timestamptz')
+  @Field()
   last_claimed_rewards!: Date;
-
-  public static async get(): Promise<Settings> {
-    let settings = await Settings.findOne();
-    if (!settings) {
-      settings = new Settings();
-      settings.last_claimed_rewards = new Date(0);
-      return await settings.save();
-    }
-    return settings;
-  }
 }

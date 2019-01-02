@@ -1,10 +1,12 @@
 import {
   Author,
   User,
+  UserResolver,
 } from '../../src';
 import { createUser, createConnection } from './util';
 import { Connection } from 'typeorm';
 import * as chai from 'chai';
+import { AuthorResolver } from '../../src/db/resolver/author';
 
 const expect = chai.expect;
 let connection: Connection;
@@ -36,7 +38,7 @@ after(() => {
 it('can get author supported by multiple users', async () => {
   const max = 10;
   for (let i = 0; i < max; ++i) {
-    const authors = await Author.getPatrons(i.toString());
+    const authors = await AuthorResolver.patrons(i.toString());
     expect(authors.length).to.eq(i);
     for (let j = 0; j < authors.length; ++j) {
       expect(authors[j].user.username).to.eq(j.toString());
@@ -49,7 +51,7 @@ it('can get author supported by multiple users', async () => {
 it('can get supported authors by user', async () => {
   for (let i = 0; i < users.length; ++i) {
     const user = users[i];
-    const authors = await user.getSupportedAuthors();
+    const authors = await new UserResolver().curating(user);
     expect(authors.length).to.eq(users.length - i - 1);
     for (let j = 0; j < authors.length; ++j) {
       expect(authors[j].author).to.eq((j + i + 1).toString());

@@ -10,59 +10,51 @@ import {
 } from 'typeorm';
 import { BotSupport } from './bot_support';
 import { Premium } from './premium';
-import { Author } from './author';
+import { ObjectType, Field } from 'type-graphql';
 
 @Entity()
+@ObjectType()
 export class User extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ nullable: false })
+  @Column()
   @Index({ unique: true })
+  @Field()
   username!: string;
 
   @CreateDateColumn({ type: "timestamptz" })
+  @Field()
   readonly created!: Date;
 
-  @OneToOne(type => Premium, { nullable: false, eager: true })
+  @OneToOne(type => Premium, { eager: true })
   @JoinColumn()
+  @Field(type => Premium)
   premium!: Premium;
 
-  @OneToOne(type => BotSupport, bot_support => bot_support.user, { nullable: false, eager: true })
+  @OneToOne(type => BotSupport, bot_support => bot_support.user, { eager: true })
   @JoinColumn()
+  @Field(type => BotSupport)
   bot_support!: BotSupport;
 
   @Column({ default: false })
+  @Field()
   claim_rewards!: boolean;
 
   @Column({ default: false })
+  @Field()
   global_vote_pause!: boolean;
 
   @Column({ default: false })
+  @Field()
   admin!: boolean;
 
   /**
    * Used when a user revokes authorization
    */
   @Column({ default: false })
+  @Field()
   disabled!: boolean;
 
-  public isPremium(): boolean {
-    const date = Date.now();
-    return (this.premium
-              && (this.premium.expiry.getTime() > date))
-              || this.admin === true;
-  }
-
-  public canVote(): boolean {
-    return (!this.disabled && this.isPremium()) || this.admin === true;
-  }
-
-  public getSupportedAuthors(): Promise<Author[]> {
-    return Author
-            .createQueryBuilder()
-            .where('"userId" = :user', { user: this.id })
-            .getMany();
-  }
 }
