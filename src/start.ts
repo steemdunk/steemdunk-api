@@ -24,7 +24,7 @@ import { buildSchema } from 'type-graphql';
       UserResolver,
       VoteLogResolver,
       VoteTaskResolver
-    ],
+    ]
   });
   const server = new ApolloServer({ schema });
 

@@ -1,6 +1,6 @@
-import { Resolver, Query } from "type-graphql";
-import { BotSupport } from "../entity/bot_support";
-import { User } from "../entity/user";
+import { Resolver, Query } from 'type-graphql';
+import { BotSupport } from '../entity/bot_support';
+import { User } from '../entity/user';
 
 @Resolver(of => BotSupport)
 export class BotSupportResolver {
