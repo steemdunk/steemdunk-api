@@ -8,11 +8,19 @@ import {
   VoteTaskResolver
 } from './db';
 import Koa from 'koa';
-import { ApolloServer } from 'apollo-server-koa';
+import { ApolloServer, AuthenticationError } from 'apollo-server-koa';
 import { ensureDbInit } from '.';
 import { buildSchema } from 'type-graphql';
+import { StringUtil } from 'steemdunk-common';
 
 (async function() {
+  const token = process.env.SD_API_TOKEN;
+  if (token === undefined) {
+    console.log('SD_API_TOKEN not specified, generating a token');
+    console.log('New token...', StringUtil.genSecureAlphaNumeric(32));
+    return;
+  }
+
   await ensureDbInit();
 
   const schema = await buildSchema({
@@ -26,7 +34,15 @@ import { buildSchema } from 'type-graphql';
       VoteTaskResolver
     ]
   });
-  const server = new ApolloServer({ schema });
+  const server = new ApolloServer({
+    schema,
+    context: ({ ctx }: any) => {
+      if (ctx.headers.api_token !== token) {
+        throw new AuthenticationError('Authentication failure');
+      }
+      return {};
+    }
+  });
 
   const app = new Koa();
   server.applyMiddleware({

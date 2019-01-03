@@ -2,8 +2,6 @@ import 'reflect-metadata';
 import { LoggerFactory } from 'steemdunk-common';
 import { db } from './db';
 
-export * from './db';
-
 const LOGGER = LoggerFactory.create('db_initializer');
 
 /**
