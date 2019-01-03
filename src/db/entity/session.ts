@@ -22,7 +22,8 @@ export class Session extends BaseEntity {
   @JoinColumn()
   user!: User;
 
-  public static async get(sessionId: string): Promise<User|undefined> {
+  static async get(sessionId: string): Promise<User|undefined> {
+    if (!sessionId) return;
     const repo = getConnection().getRepository(Session);
     const ses = await repo.findOne(sessionId);
     if (ses && ses.expiry.getTime() < Date.now()) {
@@ -33,7 +34,7 @@ export class Session extends BaseEntity {
     return ses ? ses.user : undefined;
   }
 
-  public static async prune(): Promise<any> {
+  static async prune(): Promise<any> {
     await getConnection()
             .getRepository(Session)
             .createQueryBuilder()
