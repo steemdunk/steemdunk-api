@@ -5,13 +5,14 @@ import {
   Entity
 } from 'typeorm';
 import { Plan } from 'steemdunk-common';
-import { ObjectType, Field } from 'type-graphql';
+import { ObjectType, Field, ID } from 'type-graphql';
 
 @Entity()
 @ObjectType()
 export class Premium extends BaseEntity {
 
   @PrimaryGeneratedColumn()
+  @Field(type => ID)
   id!: number;
 
   @Column("int")

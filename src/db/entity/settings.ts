@@ -16,6 +16,6 @@ export class Settings extends BaseEntity {
   id!: boolean;
 
   @Column('timestamptz')
-  @Field()
+  @Field({ name: 'lastClaimedRewards' })
   last_claimed_rewards!: Date;
 }

@@ -10,13 +10,14 @@ import {
 } from 'typeorm';
 import { BotSupport } from './bot_support';
 import { Premium } from './premium';
-import { ObjectType, Field } from 'type-graphql';
+import { ObjectType, Field, ID } from 'type-graphql';
 
 @Entity()
 @ObjectType()
 export class User extends BaseEntity {
 
   @PrimaryGeneratedColumn()
+  @Field(id => ID)
   id!: number;
 
   @Column()
@@ -35,15 +36,15 @@ export class User extends BaseEntity {
 
   @OneToOne(type => BotSupport, bot_support => bot_support.user, { eager: true })
   @JoinColumn()
-  @Field(type => BotSupport)
+  @Field(type => BotSupport, { name: 'botSupport' })
   bot_support!: BotSupport;
 
   @Column({ default: false })
-  @Field()
+  @Field({ name: 'claimRewards' })
   claim_rewards!: boolean;
 
   @Column({ default: false })
-  @Field()
+  @Field({ name: 'globalVotePause' })
   global_vote_pause!: boolean;
 
   @Column({ default: false })

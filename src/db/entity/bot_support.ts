@@ -7,7 +7,7 @@ import {
   Index
 } from 'typeorm';
 import { User } from './user';
-import { ObjectType, Field } from 'type-graphql';
+import { ObjectType, Field, ID } from 'type-graphql';
 
 @Entity()
 @Index(['last_vote', 'ban_expiry', 'enabled'])
@@ -16,6 +16,7 @@ import { ObjectType, Field } from 'type-graphql';
 export class BotSupport extends BaseEntity {
 
   @PrimaryGeneratedColumn()
+  @Field(type => ID)
   id!: number;
 
   @OneToOne(type => User, user => user.bot_support)
@@ -25,13 +26,13 @@ export class BotSupport extends BaseEntity {
   // epoch time for last vote
   @Column({ type: 'timestamptz', default: new Date(0) })
   @Index()
-  @Field()
+  @Field({ name: 'lastVote' })
   last_vote!: Date;
 
   // User is banned from queue until this time expires
   @Column({ type: 'timestamptz', default: new Date(0) })
   @Index()
-  @Field()
+  @Field({ name: 'banExpiry' })
   ban_expiry!: Date;
 
   // Whether user wants bot support

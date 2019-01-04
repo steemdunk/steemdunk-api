@@ -1,4 +1,4 @@
-import { Resolver, Query } from 'type-graphql';
+import { Resolver, Query, Mutation, Arg } from 'type-graphql';
 import { Settings } from '../entity/settings';
 
 @Resolver(of => Settings)
@@ -13,5 +13,12 @@ export class SettingsResolver {
       return await settings.save();
     }
     return settings;
+  }
+
+  @Mutation(returns => Settings)
+  async updateSettings(@Arg('lastClaimedRewards') lastClaimedRewards: Date): Promise<Settings> {
+    const settings = await this.settings();
+    settings.last_claimed_rewards = lastClaimedRewards;
+    return await settings.save();
   }
 }

@@ -1,17 +1,9 @@
-import {
-  AuthorResolver,
-  BotSupportResolver,
-  PremiumResolver,
-  SettingsResolver,
-  UserResolver,
-  VoteLogResolver,
-  VoteTaskResolver
-} from './db';
 import Koa from 'koa';
 import { ApolloServer, AuthenticationError } from 'apollo-server-koa';
-import { ensureDbInit } from '.';
-import { buildSchema } from 'type-graphql';
+import { ensureDbInit, buildDefaultSchema } from '.';
 import { StringUtil } from 'steemdunk-common';
+import fs from 'fs';
+import { printSchema } from 'graphql';
 
 (async function() {
   const token = process.env.SD_API_TOKEN;
@@ -22,18 +14,8 @@ import { StringUtil } from 'steemdunk-common';
   }
 
   await ensureDbInit();
+  const schema = await buildDefaultSchema();
 
-  const schema = await buildSchema({
-    resolvers: [
-      AuthorResolver,
-      BotSupportResolver,
-      PremiumResolver,
-      SettingsResolver,
-      UserResolver,
-      VoteLogResolver,
-      VoteTaskResolver
-    ]
-  });
   const server = new ApolloServer({
     schema,
     context: ({ ctx }: any) => {

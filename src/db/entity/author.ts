@@ -42,15 +42,15 @@ export class Author extends BaseEntity {
   author!: string;
 
   @Column()
-  @Field(type => Int)
+  @Field(type => Int, { name: 'voteWeight' })
   vote_weight!: number; // percentage
 
   @Column()
-  @Field(type => Int)
+  @Field(type => Int, { name: 'voteDelay' })
   vote_delay!: number; // unit in minutes
 
   @Column()
-  @Field(type => Int)
+  @Field(type => Int, { name: 'maxDailyVotes' })
   max_daily_votes!: number;
 
 }

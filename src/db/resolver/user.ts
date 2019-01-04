@@ -1,9 +1,33 @@
-import { Resolver, Query, Arg, FieldResolver, Root, Int } from 'type-graphql';
+import {
+  Resolver,
+  Query,
+  Arg,
+  Field,
+  FieldResolver,
+  Root,
+  Int,
+  Mutation,
+  ID,
+  InputType
+} from 'type-graphql';
 import { User } from '../entity/user';
 import { Author } from '../entity/author';
 import { VoteStatus, VoteLog } from '../entity/vote_log';
 import { MoreThan } from 'typeorm';
 import { getMinDate } from './vote_log';
+import { Plan } from 'steemdunk-common';
+import { Premium } from '../entity/premium';
+import { BotSupport } from '../entity/bot_support';
+import { ResourceNotFoundError } from '../errors';
+
+@InputType()
+export class UserInput {
+  @Field(type => ID)
+  id!: number;
+
+  @Field({ nullable: true })
+  disabled?: boolean;
+}
 
 @Resolver(of => User)
 export class UserResolver {
@@ -14,7 +38,7 @@ export class UserResolver {
       where: {
         username
       }
-    })
+    });
   }
 
   @FieldResolver(returns => Boolean)
@@ -79,5 +103,35 @@ export class UserResolver {
         permlink
       }
     })) > 0;
+  }
+
+  @Mutation(returns => User)
+  async createUser(@Arg('username') username: string): Promise<User> {
+    const premium = new Premium();
+    premium.plan = Plan.BRONZE;
+    premium.expiry = new Date(Date.now() + (1000 * 60 * 60 * 24 * 3650));
+    await premium.save();
+
+    const sup = new BotSupport();
+    await sup.save();
+
+    let user = new User();
+    user.username = username;
+    user.premium = premium;
+    user.bot_support = sup;
+    user = await user.save();
+
+    sup.user = user;
+    await sup.save();
+
+    return user;
+  }
+
+  @Mutation(returns => User)
+  async updateUser(@Arg('input') input: UserInput): Promise<User> {
+    const user = await User.findOne(input.id);
+    if (!user) throw new ResourceNotFoundError('User ID not found');
+    if (input.disabled !== undefined) user.disabled = input.disabled;
+    return await user.save();
   }
 }
