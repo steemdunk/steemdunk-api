@@ -2,8 +2,6 @@ import Koa from 'koa';
 import { ApolloServer, AuthenticationError } from 'apollo-server-koa';
 import { ensureDbInit, buildDefaultSchema } from '.';
 import { StringUtil } from 'steemdunk-common';
-import fs from 'fs';
-import { printSchema } from 'graphql';
 
 (async function() {
   const token = process.env.SD_API_TOKEN;
@@ -19,7 +17,7 @@ import { printSchema } from 'graphql';
   const server = new ApolloServer({
     schema,
     context: ({ ctx }: any) => {
-      if (ctx.headers.api_token !== token) {
+      if (ctx.headers['access-token'] !== token) {
         throw new AuthenticationError('Authentication failure');
       }
       return {};
