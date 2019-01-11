@@ -1,14 +1,18 @@
+import { Config } from 'steemdunk-common';
 import bodyParser from 'koa-bodyparser';
 import { Router } from './routes';
 import { ensureDbInit } from '.';
-import Koa from 'koa';
 import { Client } from 'steeme';
-import { Config } from 'steemdunk-common';
+import cors from '@koa/cors';
+import Koa from 'koa';
 
 (async function() {
   await ensureDbInit();
 
   const app = new Koa();
+  app.use(cors({
+    allowHeaders: 'session'
+  }) as any);
   app.use(bodyParser() as any);
 
   const r = new Router(new Client(Config.steem_net));

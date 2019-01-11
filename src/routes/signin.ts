@@ -74,12 +74,13 @@ export class RouteSignin {
       }
     });
 
-    opts.router.post('/signout', protect, async ctx => {
+    opts.router.post('/signout', loadUser, protect, async ctx => {
       if (ctx.state.user) {
-        const session = ctx.header.session;
+        const session = Session.extractToken(ctx as any);
         if (session) await Session.delete(session);
       }
       ctx.status = HttpStatus.OK;
+      ctx.body = '';
     });
   }
 }
