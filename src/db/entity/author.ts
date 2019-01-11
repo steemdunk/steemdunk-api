@@ -8,7 +8,6 @@ import {
   Index
 } from 'typeorm';
 import { User } from './user';
-import { ObjectType, Field, Int } from 'type-graphql';
 
 export interface AuthorModel {
   author: string;
@@ -26,31 +25,41 @@ export interface UserModel {
 @Index(['user', 'author'], { unique: true })
 @Index(['author'])
 @Index(['user'])
-@ObjectType()
 export class Author extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne(type => User)
+  @ManyToOne(type => User, { nullable: false })
   @JoinColumn({ name: 'userId' })
-  @Field(type => User)
   user!: User;
 
-  @Column()
-  @Field()
+  @Column({ nullable: false })
   author!: string;
 
-  @Column()
-  @Field(type => Int, { name: 'voteWeight' })
+  @Column({ nullable: false })
   vote_weight!: number; // percentage
 
-  @Column()
-  @Field(type => Int, { name: 'voteDelay' })
+  @Column({ nullable: false })
   vote_delay!: number; // unit in minutes
 
-  @Column()
-  @Field(type => Int, { name: 'maxDailyVotes' })
+  @Column({ nullable: false })
   max_daily_votes!: number;
 
+  public static getPatrons(author: string): Promise<Author[]> {
+    return Author.find({
+      where: {
+        author
+      },
+      relations: [ 'user' ]
+    });
+  }
+
+  public static getCount(user: User): Promise<number> {
+    return Author.count({
+      where: {
+        user
+      }
+    });
+  }
 }

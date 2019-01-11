@@ -7,7 +7,9 @@ import {
   Entity,
   Column,
 } from 'typeorm';
+import { StringUtil } from 'steemdunk-common';
 import { User } from './user';
+import { Context } from 'koa';
 
 @Entity()
 export class Session extends BaseEntity {
@@ -22,19 +24,37 @@ export class Session extends BaseEntity {
   @JoinColumn()
   user!: User;
 
-  static async get(sessionId: string): Promise<User|undefined> {
-    if (!sessionId) return;
+  public static async generate(user: User): Promise<Session> {
+    const sesStr = StringUtil.genSecureAlphaNumeric(48);
+
+    const ses = new Session();
+    ses.session = sesStr;
+    ses.user = user;
+    ses.expiry = new Date(Date.now() + (1000 * 60 * 60 * 24 * 3));
+    return await ses.save();
+  }
+
+  public static async get(ctx: Context): Promise<User|undefined> {
+    let session = Session.extractToken(ctx);
+    if (!session) return;
+
     const repo = getConnection().getRepository(Session);
-    const ses = await repo.findOne(sessionId);
-    if (ses && ses.expiry.getTime() < Date.now()) {
-      await repo.remove(ses);
-      return;
+    const ses = await repo.findOne(session);
+    if (ses) {
+      if (ses.expiry.getTime() < Date.now() || ses.user.disabled) {
+        await repo.remove(ses);
+        return;
+      }
     }
 
     return ses ? ses.user : undefined;
   }
 
-  static async prune(): Promise<any> {
+  public static extractToken(ctx: Context): string|undefined {
+    return ctx.headers.session;
+  }
+
+  public static async prune(): Promise<any> {
     await getConnection()
             .getRepository(Session)
             .createQueryBuilder()

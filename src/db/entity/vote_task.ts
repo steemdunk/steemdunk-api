@@ -8,11 +8,9 @@ import {
   Index
 } from 'typeorm';
 import { User } from './user';
-import { ObjectType, Field, Query, Arg } from 'type-graphql';
 
 @Entity()
 @Index(['voter', 'author', 'permlink'], { unique: true })
-@ObjectType()
 export class VoteTask extends BaseEntity {
 
   @PrimaryGeneratedColumn()
@@ -20,23 +18,41 @@ export class VoteTask extends BaseEntity {
 
   @ManyToOne(type => User, { eager: true })
   @JoinColumn()
-  @Field(type => User)
   voter!: User;
 
-  @Column()
-  @Field()
+  @Column({ nullable: false })
   author!: string;
 
-  @Column()
-  @Field()
+  @Column({ nullable: false })
   permlink!: string;
 
-  @Column({ type: "timestamptz" })
+  @Column({ type: "timestamptz", nullable: false })
   @Index()
-  @Field()
   timestamp!: Date;
 
-  @Column()
-  @Field()
+  @Column({ nullable: false })
   weight!: number;
+
+  /**
+   * Returns the article that is next to be voted on.
+   */
+  public static next(): Promise<VoteTask|undefined> {
+    return VoteTask.findOne({
+      order: {
+        timestamp: 'ASC'
+      }
+    });
+  }
+
+  public static async has(user: User,
+                          author: string,
+                          permlink: string): Promise<boolean> {
+    return (await VoteTask.count({
+      where: {
+        voter: user,
+        author,
+        permlink
+      }
+    })) > 0;
+  }
 }

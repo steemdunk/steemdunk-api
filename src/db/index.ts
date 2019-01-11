@@ -8,18 +8,10 @@ export * from './entity/vote_log';
 export * from './entity/vote_task';
 export * from './error_codes';
 
-export * from './resolver/author';
-export * from './resolver/bot_support';
-export * from './resolver/premium';
-export * from './resolver/settings';
-export * from './resolver/user';
-export * from './resolver/vote_log';
-export * from './resolver/vote_task';
-
 import { LoggerFactory } from 'steemdunk-common';
+import { VoteLog } from './entity/vote_log';
 import { createConnection } from 'typeorm';
 import { Session } from './entity/session';
-import { prune as voteLogPrune } from './resolver/vote_log';
 
 export class Db {
 
@@ -43,7 +35,7 @@ export class Db {
         Db.LOGGER.error('Failed to prune sessions', err);
       });
 
-      voteLogPrune().catch(err => {
+      VoteLog.prune().catch(err => {
         Db.LOGGER.error('Failed to prune the vote log', err);
       });
     }, 60 * 60 * 1000);

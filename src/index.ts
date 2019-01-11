@@ -1,17 +1,6 @@
 import 'reflect-metadata';
 
-import {
-  AuthorResolver,
-  BotSupportResolver,
-  PremiumResolver,
-  SettingsResolver,
-  UserResolver,
-  VoteLogResolver,
-  VoteTaskResolver
-} from './db';
 import { LoggerFactory } from 'steemdunk-common';
-import { buildSchema } from 'type-graphql';
-import { GraphQLSchema } from 'graphql';
 import { db } from './db';
 
 const LOGGER = LoggerFactory.create('db_initializer');
@@ -30,18 +19,4 @@ export async function ensureDbInit(): Promise<void> {
       await new Promise(r => setTimeout(r, 3000));
     }
   }
-}
-
-export async function buildDefaultSchema(): Promise<GraphQLSchema> {
-  return await buildSchema({
-    resolvers: [
-      AuthorResolver,
-      BotSupportResolver,
-      PremiumResolver,
-      SettingsResolver,
-      UserResolver,
-      VoteLogResolver,
-      VoteTaskResolver
-    ]
-  });
 }
