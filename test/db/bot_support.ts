@@ -1,5 +1,5 @@
-import { BotSupportResolver } from '../../src';
 import { createUser, createConnection } from './util';
+import { BotSupport } from '../../src/db';
 import { Connection } from 'typeorm';
 import * as chai from 'chai';
 
@@ -30,12 +30,12 @@ it('can get the latest vote and least recently voted', async () => {
   userC.bot_support.last_vote = new Date(0);
   await userC.bot_support.save();
 
-  const vote = (await BotSupportResolver.botSupportLatestVote())!;
+  const vote = (await BotSupport.getLatestVote())!;
   expect(vote).to.exist;
   expect(vote.user).to.exist;
   expect(vote.user.username).to.eq(userA.username);
 
-  const voter = (await BotSupportResolver.botSupportLrv())!;
+  const voter = (await BotSupport.getLrv())!;
   expect(voter).to.exist;
   expect(voter.user).to.exist;
   expect(voter.user.username).to.eq(userB.username);

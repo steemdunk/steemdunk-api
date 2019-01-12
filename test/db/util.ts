@@ -1,4 +1,4 @@
-import { BotSupport, User, Premium } from '../../src';
+import { BotSupport, User, Premium } from '../../src/db';
 import { Plan } from 'steemdunk-common';
 import { Connection } from 'typeorm';
 import * as typeorm from 'typeorm';

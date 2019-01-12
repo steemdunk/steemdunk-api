@@ -1,6 +1,6 @@
 import { createUser, createConnection } from './util';
+import { VoteTask } from '../../src/db';
 import { Connection } from 'typeorm';
-import { VoteTask } from '../../src';
 
 let connection: Connection;
 

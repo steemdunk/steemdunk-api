@@ -1,9 +1,5 @@
-import {
-  VoteStatus,
-  VoteLog,
-  UserResolver,
-} from '../../src';
 import { createUser, createConnection } from './util';
+import { VoteStatus, VoteLog } from '../../src/db';
 import { Connection } from 'typeorm';
 import * as chai from 'chai';
 
@@ -19,7 +15,6 @@ after(() => {
 });
 
 it('has a log entry', async () => {
-  const userResolver = new UserResolver();
   const userA = await createUser('A');
   const userB = await createUser('B');
 
@@ -40,13 +35,13 @@ it('has a log entry', async () => {
   entryB.timestamp = new Date();
 
   await connection.manager.save(entryA);
-  let has = await userResolver.hasVoteLogEntry(userA, 'author', 'link');
+  let has = await VoteLog.has(userA, 'author', 'link');
   expect(has).is.true;
 
-  has = await userResolver.hasVoteLogEntry(userB, 'author', 'link');
+  has = await VoteLog.has(userB, 'author', 'link');
   expect(has).is.false;
 
   await connection.manager.save(entryB);
-  has = await userResolver.hasVoteLogEntry(userB, 'author', 'link');
+  has = await VoteLog.has(userB, 'author', 'link');
   expect(has).is.true;
 });
