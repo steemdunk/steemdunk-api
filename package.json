@@ -1,7 +1,7 @@
 {
   "name": "steemdunk-api",
   "version": "0.0.1",
-  "description": "Steemdunk API library",
+  "description": "Steemdunk API server",
   "main": "lib/index.js",
   "author": "Samuel Grenier <samrg472@gmail.com>",
   "license": "MIT",
