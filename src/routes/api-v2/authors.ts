@@ -75,13 +75,11 @@ export async function addAuthor(opts: ProcessApiOpts): Promise<RpcOutgoing> {
   try {
     const acc = await opts.client.db.getAccounts(model.author);
     if (acc.length !== 1) {
-      return {
-        error: 'Account not found on Steemit.'
-      };
+      return { error: 'Account not found on Steemit.' };
     }
   } catch (e) {
     return {
-      error: 'Failed to connect to Steemit, please try again later.'
+      error: 'Failed to connect to Steemit.'
     };
   }
 
@@ -99,9 +97,7 @@ export async function addAuthor(opts: ProcessApiOpts): Promise<RpcOutgoing> {
     };
   } catch (e) {
     if (e.code === DbErrorCode.UQ_VIOLATION) {
-      return {
-        error: 'You already support this author!'
-      };
+      return { error: 'You already support this author!' };
     }
     throw e;
   }
