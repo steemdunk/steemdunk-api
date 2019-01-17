@@ -11,7 +11,7 @@ import Koa from 'koa';
 
   const app = new Koa();
   app.use(cors({
-    allowHeaders: 'session'
+    allowHeaders: ['content-type', 'session']
   }) as any);
   app.use(bodyParser() as any);
 
