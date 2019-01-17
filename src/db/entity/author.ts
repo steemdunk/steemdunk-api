@@ -11,9 +11,9 @@ import { User } from './user';
 
 export interface AuthorModel {
   author: string;
-  vote_weight: number; // percentage
-  vote_delay: number; // unit in minutes
-  max_daily_votes: number;
+  voteWeight: number; // percentage
+  voteDelay: number; // unit in minutes
+  maxDailyVotes: number;
 }
 
 export interface UserModel {

@@ -1,22 +1,15 @@
-import {
-  Payment,
-  Plan
-} from 'steemdunk-common';
 import { AuthorModel, Author, DbErrorCode } from '../../db';
 import { ProcessApiOpts, RpcOutgoing } from './util';
+import { Payment } from 'steemdunk-common';
 
 export async function getAuthors(opts: ProcessApiOpts): Promise<RpcOutgoing> {
   const data = await opts.user.getSupportedAuthors();
-  const supporting: AuthorModel[] = [];
-  for (const d of data) {
-    supporting.push({
-      author: d.author,
-      vote_weight: d.vote_weight,
-      vote_delay: d.vote_delay,
-      max_daily_votes: d.max_daily_votes
-    });
-  }
-
+  const supporting: AuthorModel[] = data.map(d => ({
+    author: d.author,
+    voteWeight: d.vote_weight,
+    voteDelay: d.vote_delay,
+    maxDailyVotes: d.max_daily_votes
+  }));
   return {
     data: supporting
   };
@@ -59,9 +52,9 @@ export async function updateAuthor(opts: ProcessApiOpts): Promise<RpcOutgoing> {
     };
   }
 
-  author.max_daily_votes = model.max_daily_votes;
-  author.vote_delay = model.vote_delay;
-  author.vote_weight = model.vote_weight;
+  author.max_daily_votes = model.maxDailyVotes;
+  author.vote_delay = model.voteDelay;
+  author.vote_weight = model.voteWeight;
   await author.save();
 
   return {};
@@ -69,23 +62,14 @@ export async function updateAuthor(opts: ProcessApiOpts): Promise<RpcOutgoing> {
 
 export async function addAuthor(opts: ProcessApiOpts): Promise<RpcOutgoing> {
   const model = sanitizeAuthorSettings(opts.params);
-  if (!model) {
-    return {
-      error: 'Failed to add author, invalid settings provided.'
-    };
-  }
+  if (!model) return { error: 'Invalid settings provided.' };
 
-  const count = await Author.getCount(opts.user);
-  let quota = opts.user.premium ? Payment.getQuota(opts.user.premium.plan) : 0;
-  if (opts.user.admin === true) quota = Number.MAX_SAFE_INTEGER;
-  if (count >= quota) {
-    let msg = 'Quota limit exceeded.';
-    if (opts.user.premium && opts.user.premium.plan !== Plan.GOLD) {
-      msg += ' Upgrading your plan will allow you to add more authors.';
-    }
-    return {
-      error: msg
-    };
+  {
+    let quota = Payment.getQuota(opts.user.premium.plan);
+    if (opts.user.admin === true) quota = Number.MAX_SAFE_INTEGER;
+
+    const count = await Author.getCount(opts.user);
+    if (count >= quota) return { error: 'Quota limit exceeded.' };
   }
 
   try {
@@ -104,9 +88,9 @@ export async function addAuthor(opts: ProcessApiOpts): Promise<RpcOutgoing> {
   const author = new Author();
   author.user = opts.user;
   author.author = model.author;
-  author.max_daily_votes = model.max_daily_votes;
-  author.vote_delay = model.vote_delay;
-  author.vote_weight = model.vote_weight;
+  author.max_daily_votes = model.maxDailyVotes;
+  author.vote_delay = model.voteDelay;
+  author.vote_weight = model.voteWeight;
 
   try {
     await author.save();
@@ -123,11 +107,11 @@ export async function addAuthor(opts: ProcessApiOpts): Promise<RpcOutgoing> {
   }
 }
 
-function sanitizeAuthorSettings(params: any): AuthorModel|null {
+function sanitizeAuthorSettings(params: AuthorModel): AuthorModel|null {
   let author: string = params.author;
-  const voteWeight: number = parseInt(params.vote_weight, 10);
-  const voteDelay: number = parseInt(params.vote_delay, 10);
-  const maxVotes: number = parseInt(params.max_daily_votes, 10);
+  const voteWeight: number = Number(params.voteWeight);
+  const voteDelay: number = Number(params.voteDelay);
+  const maxDailyVotes: number = Number(params.maxDailyVotes);
 
   if (!(author && author.length)) {
     return null;
@@ -139,9 +123,9 @@ function sanitizeAuthorSettings(params: any): AuthorModel|null {
               || voteDelay < 0
               || voteDelay > 1440) {
     return null;
-  } else if (!Number.isSafeInteger(maxVotes)
-              || maxVotes < 0
-              || maxVotes > 20) {
+  } else if (!Number.isSafeInteger(maxDailyVotes)
+              || maxDailyVotes < 0
+              || maxDailyVotes > 20) {
     return null;
   }
 
@@ -152,8 +136,8 @@ function sanitizeAuthorSettings(params: any): AuthorModel|null {
 
   return {
     author,
-    vote_weight: voteWeight,
-    vote_delay: voteDelay,
-    max_daily_votes: maxVotes
+    voteWeight,
+    voteDelay,
+    maxDailyVotes
   };
 }
