@@ -1,36 +1,41 @@
 import { RpcOutgoing, ProcessApiOpts } from './util';
 import { LoggerFactory } from 'steemdunk-common';
-import { SteemUtil } from 'steeme';
 import { Premium, Session } from '../../db';
+import { SteemUtil } from 'steeme';
 
 const LOGGER = LoggerFactory.create('api-v2-account');
 
 interface SteemInfo {
   // Information received from Steem
-  voting_power_percent?: number;
+  votingPowerPercent?: number;
+}
+
+interface Settings {
+  botSupport: boolean;
+  claimRewards: boolean;
+  globalVotePause: boolean;
 }
 
 interface AccountInfo {
-  username: string;
   session: string;
-  bot_support: boolean;
-  claim_rewards: boolean;
-  global_vote_pause: boolean;
-  premium?: Premium;
-  steem?: SteemInfo;
+  username: string;
+  premium: Premium;
+  settings: Settings;
+  steem: SteemInfo;
 }
 
 export async function getAccountInfo(opts: ProcessApiOpts): Promise<RpcOutgoing> {
   const info: AccountInfo = {
-    username: opts.user.username,
     session: Session.extractToken(opts.ctx)!,
+    username: opts.user.username,
     premium: opts.user.premium,
-    claim_rewards: opts.user.claim_rewards,
-    bot_support: opts.user.bot_support.enabled,
-    global_vote_pause: opts.user.global_vote_pause
+    settings: {
+      claimRewards: opts.user.claim_rewards,
+      botSupport: opts.user.bot_support.enabled,
+      globalVotePause: opts.user.global_vote_pause
+    },
+    steem: {}
   };
-
-  info.steem = {};
 
   try {
     const client = opts.client;
@@ -38,7 +43,7 @@ export async function getAccountInfo(opts: ProcessApiOpts): Promise<RpcOutgoing>
     if (accs.length !== 1) throw new Error('account not found');
 
     const act = accs[0];
-    info.steem.voting_power_percent = SteemUtil.getVotingPowerPct(act);
+    info.steem.votingPowerPercent = SteemUtil.getVotingPowerPct(act);
   } catch (e) {
     LOGGER.error('Failed to get Steemit account', e);
   }
@@ -48,10 +53,11 @@ export async function getAccountInfo(opts: ProcessApiOpts): Promise<RpcOutgoing>
   };
 }
 
-export async function setSettings(opts: ProcessApiOpts): Promise<RpcOutgoing> {
-  const support = opts.params.bot_support;
-  const claimRewards = opts.params.claim_rewards;
-  const gvPause = opts.params.global_vote_pause;
+export async function updateSettings(opts: ProcessApiOpts): Promise<RpcOutgoing> {
+  const settings: Settings = opts.params;
+  const support = settings.botSupport;
+  const claimRewards = settings.claimRewards;
+  const gvPause = settings.globalVotePause;
   if (support === undefined || typeof(support) !== 'boolean') {
     return { error: 'Invalid bot_support parameter' };
   } else if (claimRewards === undefined || typeof(claimRewards) !== 'boolean') {

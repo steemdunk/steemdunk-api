@@ -1,15 +1,35 @@
-import { Config } from 'steemdunk-common';
+import { Config, LoggerFactory } from 'steemdunk-common';
 import bodyParser from 'koa-bodyparser';
 import { Router } from './routes';
 import { ensureDbInit } from '.';
 import { Client } from 'steeme';
 import cors from '@koa/cors';
+import chalk from 'chalk';
 import Koa from 'koa';
+
+const logger = LoggerFactory.create('server');
 
 (async function() {
   await ensureDbInit();
 
   const app = new Koa();
+
+  app.use(async (ctx, next) => {
+    const start = Date.now();
+    await next();
+    const end = Date.now() - start;
+    let status: string;
+    const statusCode = ctx.response.status;
+    if (statusCode >= 400 && statusCode < 500) {
+      status = chalk`{yellow ${statusCode.toString()}}`;
+    } else if (statusCode >= 500) {
+      status = chalk`{red ${statusCode.toString()}}`;
+    } else {
+      status = chalk`{green ${statusCode.toString()}}`;
+    }
+    logger.info(`${ctx.ip} ${status} ${ctx.method} ${end}ms ${ctx.url}`);
+  });
+
   app.use(cors({
     allowHeaders: ['content-type', 'session']
   }) as any);

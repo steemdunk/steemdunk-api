@@ -10,7 +10,7 @@ import {
   loadUser
 } from '../middleware';
 import {ProcessApiOpts, RpcIncoming, RpcOutgoing} from './util';
-import {getAccountInfo, setSettings} from './account';
+import {getAccountInfo, updateSettings} from './account';
 import HttpStatus from 'http-status';
 import {getVoteLog} from './voting';
 import {SetupRoute} from '../util';
@@ -33,8 +33,8 @@ function userApi(rpc: RpcIncoming, opts: ProcessApiOpts): Promise<RpcOutgoing> {
     // Account APIs
     case 'get_account':
       return getAccountInfo(opts);
-    case 'set_settings':
-      return setSettings(opts);
+    case 'update_settings':
+      return updateSettings(opts);
   }
   return undefined as any;
 }
