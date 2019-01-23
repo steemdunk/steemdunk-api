@@ -23,8 +23,6 @@ async function ensureDbInit(): Promise<void> {
   }
 }
 
-const logger = LoggerFactory.create('server');
-
 (async function() {
   await ensureDbInit();
 
@@ -43,7 +41,7 @@ const logger = LoggerFactory.create('server');
     } else {
       status = chalk`{green ${statusCode.toString()}}`;
     }
-    logger.info(`${ctx.ip} ${status} ${ctx.method} ${end}ms ${ctx.url}`);
+    LOGGER.info(`${ctx.ip} ${status} ${ctx.method} ${end}ms ${ctx.url}`);
   });
 
   app.use(cors({
