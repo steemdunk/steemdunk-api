@@ -9,7 +9,7 @@
     "prepare": "npm run build",
     "build": "gulp build",
     "test": "cross-env NODE_ENV=TEST npx mocha -r ts-node/register test/index.ts",
-    "start": "node ./lib/start.js"
+    "start": "node ./lib/index.js"
   },
   "files": [
     "tsconfig.json",
