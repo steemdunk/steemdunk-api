@@ -27,6 +27,10 @@ async function ensureDbInit(): Promise<void> {
   await ensureDbInit();
 
   const app = new Koa();
+  app.proxy = process.env.TRUST_PROXY === 'true';
+
+  LOGGER.info(`Starting in ${app.env} mode`);
+  LOGGER.info(`Trusting proxy headers: ${app.proxy}`);
 
   app.use(async (ctx, next) => {
     const start = Date.now();
@@ -55,8 +59,8 @@ async function ensureDbInit(): Promise<void> {
   const host = process.env.SD_API_HOST || '127.0.0.1';
   const port = Number.parseInt(process.env.SD_API_PORT || '3001');
   app.listen(port, host, () => {
-    console.log(`Server started on http://${host}:${port}`);
+    LOGGER.info(`Server started on http://${host}:${port}`);
   });
 })().catch(e => {
-  console.error('Startup error:', e);
+  LOGGER.error('Startup error:', e);
 });
