@@ -5,6 +5,7 @@ import bodyParser from 'koa-bodyparser';
 import { Router } from './routes';
 import { Client } from 'steeme';
 import cors from '@koa/cors';
+import { Bot } from './bot';
 import { db } from './db';
 import chalk from 'chalk';
 import Koa from 'koa';
@@ -23,9 +24,13 @@ async function ensureDbInit(): Promise<void> {
   }
 }
 
-(async function() {
-  await ensureDbInit();
+async function startBot() {
+  const bot = new Bot();
+  bot.start();
+  LOGGER.info('Bot started');
+}
 
+async function startServer() {
   const app = new Koa();
   app.proxy = process.env.TRUST_PROXY === 'true';
 
@@ -61,6 +66,12 @@ async function ensureDbInit(): Promise<void> {
   app.listen(port, host, () => {
     LOGGER.info(`Server started on http://${host}:${port}`);
   });
+}
+
+(async function() {
+  await ensureDbInit();
+  await startBot();
+  await startServer();
 })().catch(e => {
   LOGGER.error('Startup error:', e);
 });
