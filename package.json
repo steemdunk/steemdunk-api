@@ -2,20 +2,21 @@
   "name": "steemdunk-api",
   "version": "0.0.1",
   "description": "Steemdunk API server",
-  "main": "lib/index.js",
+  "main": "out/index.js",
   "author": "Samuel Grenier <samrg472@gmail.com>",
   "license": "MIT",
   "scripts": {
     "prepare": "npm run build",
     "build": "gulp build",
+    "clean": "gulp clean",
     "test": "cross-env NODE_ENV=TEST npx mocha -r ts-node/register test/index.ts",
-    "start": "node ./lib/index.js"
+    "start": "node ./out/index.js"
   },
   "files": [
     "tsconfig.json",
     "gulpfile.js",
     "src",
-    "lib"
+    "out"
   ],
   "types": "./lib/index.d.ts",
   "dependencies": {

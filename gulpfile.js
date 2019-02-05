@@ -8,7 +8,7 @@ const del = require('del');
 const config = path.join(__dirname, 'tsconfig.json');
 const proj = ts.createProject(config);
 const src = path.join(__dirname, 'src', '**', '*.ts');
-const outDir = path.join(__dirname, 'lib');
+const outDir = path.join(__dirname, 'out');
 
 gulp.task('build', () => {
   const res = gulp.src(src)
