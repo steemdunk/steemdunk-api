@@ -7,7 +7,7 @@ if (process.env.TYPEORM_OVERRIDES) {
   overridesPath = path.join(__dirname, 'ormconfig.overrides.js');
 }
 const overrides = require(overridesPath);
-const srcDir = process.env.NODE_ENV !== 'TEST' ? 'lib' : 'src';
+const srcDir = process.env.NODE_ENV !== 'TEST' ? 'out' : 'src';
 
 module.exports = Object.assign({
   'type': 'postgres',
