@@ -3674,9 +3674,9 @@ static-extend@^0.1.1:
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.5.0.tgz#161c7dac177659fd9811f43771fa99381478628c"
   integrity sha1-Fhx9rBd2Wf2YEfQ3cfqZOBR4Yow=
 
-"steemdunk-common@git+https://github.com/steemdunk/steemdunk-common.git#14d4db9":
+"steemdunk-common@git+https://github.com/steemdunk/steemdunk-common.git#c2c8e30":
   version "0.0.1"
-  resolved "git+https://github.com/steemdunk/steemdunk-common.git#14d4db9ca560dc9d918482ed6dd24f5238e75009"
+  resolved "git+https://github.com/steemdunk/steemdunk-common.git#c2c8e30ff0393cc1000deb2b156be463c6971c7e"
   dependencies:
     chalk "^2.4.2"
     debug "^4.1.0"

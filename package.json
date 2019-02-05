@@ -30,7 +30,7 @@
     "loglevel": "^1.6.1",
     "pg": "^7.8.0",
     "reflect-metadata": "^0.1.13",
-    "steemdunk-common": "git+https://github.com/steemdunk/steemdunk-common.git#14d4db9",
+    "steemdunk-common": "git+https://github.com/steemdunk/steemdunk-common.git#c2c8e30",
     "steeme": "git+https://github.com/steemdunk/steeme.git#b7a1b60",
     "typeorm": "^0.2.12"
   },
