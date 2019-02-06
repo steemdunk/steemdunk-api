@@ -33,6 +33,7 @@ export async function rmAuthor(opts: ProcessApiOpts): Promise<RpcOutgoing> {
 }
 
 export async function updateAuthor(opts: ProcessApiOpts): Promise<RpcOutgoing> {
+  if (!opts.user.isPremium()) return { error: 'Action disabled' };
   const model = sanitizeAuthorSettings(opts.params);
   if (!model) {
     return {
@@ -61,6 +62,8 @@ export async function updateAuthor(opts: ProcessApiOpts): Promise<RpcOutgoing> {
 }
 
 export async function addAuthor(opts: ProcessApiOpts): Promise<RpcOutgoing> {
+  if (!opts.user.isPremium()) return { error: 'Action disabled' };
+
   const model = sanitizeAuthorSettings(opts.params);
   if (!model) return { error: 'Invalid settings provided.' };
 
