@@ -54,6 +54,7 @@ export class ClaimRewards {
         });
         for (const u of users) {
           try {
+            if (!u.isPremium()) continue;
             const acc = (await this.client.db.getAccounts(u.username))[0];
             await this.claimRewards(acc);
           } catch (e) {

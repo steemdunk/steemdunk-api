@@ -9,6 +9,7 @@ import {
   Index
 } from 'typeorm';
 import { BotSupport } from './bot_support';
+import { Plan } from 'steemdunk-common';
 import { Premium } from './premium';
 import { Author } from './author';
 
@@ -49,14 +50,10 @@ export class User extends BaseEntity {
   disabled!: boolean;
 
   public isPremium(): boolean {
-    const date = Date.now();
-    return (this.premium
-              && (this.premium.expiry.getTime() > date))
-              || this.admin === true;
-  }
-
-  public canVote(): boolean {
-    return (!this.disabled && this.isPremium()) || this.admin === true;
+    return !this.disabled &&
+            (this.premium.expiry.getTime() > Date.now()
+            || this.premium.plan === Plan.BRONZE
+            || this.admin === true);
   }
 
   public getSupportedAuthors(): Promise<Author[]> {

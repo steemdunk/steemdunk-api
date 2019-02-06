@@ -48,7 +48,7 @@ Upvote this comment to support the bot and increase your future rewards!
           const user = entry ? entry.user : undefined;
           if (!user) {
             break;
-          } else if (!user.canVote()) {
+          } else if (!user.isPremium()) {
             // Get this user out of the queue for a full 10 cycles
             user.bot_support.last_vote = new Date(0);
             user.bot_support.ban_expiry = new Date(Date.now() + (BotUpvoteSupport.MIN_TIME * 10));

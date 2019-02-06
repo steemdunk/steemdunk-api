@@ -49,7 +49,7 @@ export class UserProcessor {
     for (const m of models) {
       try {
         const user = m.user;
-        if (!user.canVote()
+        if (!user.isPremium()
             || (await VoteTask.has(user, comment.author, comment.permlink))) continue;
 
         const div = SteemUtil.WEIGHT_100_PERCENT / 100;
@@ -110,7 +110,7 @@ export class UserProcessor {
   private async executeVoteTask(article: VoteTask): Promise<void> {
     try {
       const user = article.voter;
-      if (!user.canVote()
+      if (!user.isPremium()
             || (await VoteLog.has(user, article.author, article.permlink))) {
         await article.remove();
         return;
