@@ -9,7 +9,7 @@ import {
   Index
 } from 'typeorm';
 import { BotSupport } from './bot_support';
-import { Plan } from 'steemdunk-common';
+import { Plan, Payment } from 'steemdunk-common';
 import { Premium } from './premium';
 import { Author } from './author';
 
@@ -48,6 +48,18 @@ export class User extends BaseEntity {
    */
   @Column({ default: false })
   disabled!: boolean;
+
+  public async downgrade(plan: Plan, expiry: Date): Promise<string|undefined> {
+    const quota = Payment.getQuota(plan);
+    const count = await Author.getCount(this);
+    if (count > quota) {
+      return `This plan only supports a maximum of ${quota} authors.`
+    }
+
+    this.premium.plan = plan;
+    this.premium.expiry = expiry;
+    await this.premium.save();
+  }
 
   public isPremium(): boolean {
     return !this.disabled &&

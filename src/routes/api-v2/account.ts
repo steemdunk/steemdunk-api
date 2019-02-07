@@ -1,5 +1,5 @@
+import { LoggerFactory, Plan } from 'steemdunk-common';
 import { RpcOutgoing, ProcessApiOpts } from './util';
-import { LoggerFactory } from 'steemdunk-common';
 import { Premium, Session } from '../../db';
 import { SteemUtil } from 'steeme';
 
@@ -75,4 +75,16 @@ export async function updateSettings(opts: ProcessApiOpts): Promise<RpcOutgoing>
   await user.save();
 
   return {};
+}
+
+export async function completeDowngrade(opts: ProcessApiOpts): Promise<RpcOutgoing> {
+  const expiry = new Date(Date.now() + (1000 * 60 * 60 * 24 * 3650));
+  const downgradeError = await opts.user.downgrade(Plan.BRONZE, expiry);
+  if (downgradeError) {
+    return { error: downgradeError };
+  }
+
+  return {
+    data: opts.user.premium
+  };
 }

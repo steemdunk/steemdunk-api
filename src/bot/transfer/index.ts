@@ -100,24 +100,19 @@ https://steemdunk.xyz/upgrade for more information.`
       });
     }
 
-    {
-      const quota = Payment.getQuota(plan);
-      const count = await Author.getCount(user);
-      if (count > quota) {
-        return await guaranteeTransfer({
-          client: this.client,
-          to: transfer.from,
-          amount: transfer.amount,
-          memo: `Refund - Plan downgrade failed. Please remove authors from \
-your author curation list. This plan only supports a maximum of ${quota} \
-authors. Visit https://steemdunk.xyz/upgrade for more information.`
-        });
-      }
-    }
-
     const expiry = new Date();
     if (monthly) expiry.setUTCMonth(expiry.getUTCMonth() + 1);
     else expiry.setUTCFullYear(expiry.getUTCFullYear() + 1);
+
+    const downgradeError = await user.downgrade(plan, expiry);
+    if (downgradeError) {
+      return await guaranteeTransfer({
+        client: this.client,
+        to: transfer.from,
+        amount: transfer.amount,
+        memo: `Refund - Plan downgrade failed with reason: ${downgradeError}`
+      });
+    }
 
     await guaranteeTransfer({
       client: this.client,
@@ -126,10 +121,6 @@ authors. Visit https://steemdunk.xyz/upgrade for more information.`
       memo: `Success - Your plan has been activated for ${Plan[plan]} and will \
 expire on ${this.dateToString(expiry)}`
     });
-
-    user.premium.expiry = expiry;
-    user.premium.plan = plan;
-    await user.premium.save();
   }
 
   private dateToString(date: Date) {
