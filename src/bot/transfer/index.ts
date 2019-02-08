@@ -6,12 +6,11 @@ import {
 } from 'steeme';
 import {
   PlanPrice,
-  Payment,
   Config,
   Plan
 } from 'steemdunk-common';
 import { guaranteeTransfer } from './transfer';
-import { User, Author } from '../../db';
+import { User } from '../../db';
 
 export class Transfer {
 
@@ -48,11 +47,6 @@ export class Transfer {
 To send a donation, please use "donate" as your memo`
       });
     }
-
-    // Disable paid upvotes for now
-    /*if (asset.amount === votePrice) {
-      return await processUpvote(this.client, transfer);
-    }*/
 
     const user = await User.findOne({
       where: {
