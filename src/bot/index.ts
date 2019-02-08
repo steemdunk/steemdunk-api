@@ -29,7 +29,7 @@ export class Bot {
         }
         return;
       }
-      Bot.LOGGER.info(`Processing block ${blockNum} (${block.transactions.length})`);
+      Bot.LOGGER.info(`Processing block ${blockNum} (${block.transactions.length} txs)`);
       for (const tx of block.transactions) {
         for (const op of tx.operations) {
           try {
