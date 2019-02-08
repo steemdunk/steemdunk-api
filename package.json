@@ -30,12 +30,12 @@
     "pg": "^7.8.0",
     "reflect-metadata": "^0.1.13",
     "steemdunk-common": "git+https://github.com/steemdunk/steemdunk-common.git#c2c8e30",
-    "steeme": "git+https://github.com/steemdunk/steeme.git#19cfd0c",
+    "steeme": "git+https://github.com/steemdunk/steeme.git#b01ea6d",
     "typeorm": "^0.2.12"
   },
   "devDependencies": {
     "@types/chai": "^4.1.4",
-    "@types/debug": "0.0.31",
+    "@types/debug": "4.1.0",
     "@types/http-status": "^0.2.30",
     "@types/koa": "^2.0.48",
     "@types/koa-bodyparser": "^4.2.1",
@@ -43,7 +43,7 @@
     "@types/koa__cors": "^2.2.3",
     "@types/loglevel": "^1.5.4",
     "@types/mocha": "^5.2.2",
-    "@types/node": "^10.12.21",
+    "@types/node": "^10.12.23",
     "chai": "^4.1.2",
     "cross-env": "^5.2.0",
     "del": "^3.0.0",
@@ -53,6 +53,6 @@
     "mocha": "^5.2.0",
     "ts-node": "^8.0.2",
     "tslint": "^5.12.1",
-    "typescript": "^3.3.1"
+    "typescript": "^3.3.3"
   }
 }
