@@ -1,4 +1,5 @@
-import {RouteSignin} from './signin';
+import { setupSignin } from './signin';
+import { noCache } from './middleware';
 import { SetupRoute } from './util';
 import {setupApiV2} from './api-v2';
 import KoaRouter from 'koa-router';
@@ -26,7 +27,12 @@ export class Router {
       steemClient: this.client
     };
 
+    this.router.get('/health', noCache, ctx => {
+      ctx.body = {
+        status: 'OK'
+      };
+    });
     setupApiV2(opts);
-    RouteSignin.setup(opts);
+    setupSignin(opts);
   }
 }
