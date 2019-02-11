@@ -1,12 +1,12 @@
 import {
   Plan,
-  SC2,
   LoggerFactory
 } from 'steemdunk-common';
 import { User, Premium, BotSupport, Session } from '../db';
 import { protect, loadUser } from './middleware';
-import { SetupRoute } from './util';
 import HttpStatus from 'http-status';
+import { SetupRoute } from './util';
+import { SC2 } from '../sc2';
 
 const LOGGER = LoggerFactory.create('route_signin');
 

@@ -6,10 +6,10 @@ import {
 } from 'steeme';
 import {
   PlanPrice,
-  Config,
   Plan
 } from 'steemdunk-common';
 import { guaranteeTransfer } from './transfer';
+import { getConfig } from '../../config';
 import { User } from '../../db';
 
 export class Transfer {
@@ -18,7 +18,7 @@ export class Transfer {
   }
 
   async handleOp(transfer: TransferOp[1]) {
-    if (transfer.to !== Config.steem_settings.broadcast_account) {
+    if (transfer.to !== getConfig().steem_settings.broadcast_account) {
       return;
     }
 

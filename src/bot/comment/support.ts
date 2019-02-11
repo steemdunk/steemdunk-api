@@ -3,17 +3,15 @@ import {
   Client,
   Util
 } from 'steeme';
-import {
-  LoggerFactory,
-  Config
-} from 'steemdunk-common';
+import { LoggerFactory } from 'steemdunk-common';
 import { BotSupport, User } from '../../db';
+import { getConfig } from '../../config';
 import { upvote, reply } from '../util';
 import newDebug from 'debug';
 
 const debug = newDebug('bot:bot_support');
 
-const BOT_ACCOUNT = Config.steem_settings.broadcast_account;
+const BOT_ACCOUNT = getConfig().steem_settings.broadcast_account;
 
 export class BotUpvoteSupport {
 
@@ -112,7 +110,7 @@ Upvote this comment to support the bot and increase your future rewards!
       this.success = true;
       user.bot_support.last_vote = new Date();
       await user.bot_support.save();
-      await upvote(this.client, disc, Config.steem_settings.voting_power);
+      await upvote(this.client, disc, getConfig().steem_settings.voting_power);
       await reply(this.client, disc, BotUpvoteSupport.COMMENT_TEMPLATE);
       return true;
     }

@@ -4,8 +4,9 @@ import {
   CommentOp,
   Client
 } from 'steeme';
-import { Config, LoggerFactory } from 'steemdunk-common';
+import { LoggerFactory } from 'steemdunk-common';
 import { ClaimRewards } from './claim_rewards';
+import { getConfig } from '../config';
 import { Transfer } from './transfer';
 import { Comment } from './comment';
 
@@ -14,7 +15,7 @@ export class Bot {
   private static readonly LOGGER = LoggerFactory.create('bot');
 
   start(): Client {
-    const client = new Client(Config.steem_net);
+    const client = new Client(getConfig().steem_net);
     const transfer = new Transfer(client);
     const comment = new Comment(client);
     const rewards = new ClaimRewards(client);

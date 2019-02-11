@@ -8,15 +8,13 @@ import {
   Client,
   Util
 } from 'steeme';
-import {
-  LoggerFactory,
-  Config
-} from 'steemdunk-common';
-import newDebug from 'debug';
 import { Author, VoteTask, DbErrorCode, VoteLog, VoteStatus } from '../../db';
+import { LoggerFactory } from 'steemdunk-common';
+import { getConfig } from '../../config';
+import newDebug from 'debug';
 
 const debug = newDebug('bot:user_processor');
-const BOT_KEY = PrivateKey.fromWif(Config.steem_settings.posting_wif);
+const BOT_KEY = PrivateKey.fromWif(getConfig().steem_settings.posting_wif);
 
 interface Task {
   timestamp: number;

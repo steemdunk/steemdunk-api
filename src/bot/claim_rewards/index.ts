@@ -4,12 +4,10 @@ import {
   Account,
   Client
 } from 'steeme';
-import {
-  LoggerFactory,
-  Config,
-} from 'steemdunk-common';
-import newDebug from 'debug';
+import { LoggerFactory } from 'steemdunk-common';
 import { Settings, User } from '../../db';
+import { getConfig } from '../../config';
+import newDebug from 'debug';
 
 const debug = newDebug('bot:claim_rewards');
 
@@ -20,7 +18,7 @@ export class ClaimRewards {
   private readonly postingKey: PrivateKey;
 
   constructor(readonly client: Client) {
-    this.postingKey = PrivateKey.fromWif(Config.steem_settings.posting_wif);
+    this.postingKey = PrivateKey.fromWif(getConfig().steem_settings.posting_wif);
   }
 
   async start() {
@@ -41,7 +39,7 @@ export class ClaimRewards {
     setTimeout(async () => {
       try {
         {
-          const botAcc = Config.steem_settings.broadcast_account;
+          const botAcc = getConfig().steem_settings.broadcast_account;
           const acc = (await this.client.db.getAccounts(botAcc))[0];
           await this.claimRewards(acc);
         }

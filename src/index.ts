@@ -1,7 +1,8 @@
 import 'reflect-metadata';
 
-import { LoggerFactory, Config } from 'steemdunk-common';
+import { LoggerFactory } from 'steemdunk-common';
 import bodyParser from 'koa-bodyparser';
+import { getConfig } from './config';
 import { Router } from './routes';
 import { Client } from 'steeme';
 import cors from '@koa/cors';
@@ -58,7 +59,7 @@ async function startServer() {
   }) as any);
   app.use(bodyParser() as any);
 
-  const r = new Router(new Client(Config.steem_net));
+  const r = new Router(new Client(getConfig().steem_net));
   r.install(app);
 
   const host = process.env.SD_API_HOST || '127.0.0.1';

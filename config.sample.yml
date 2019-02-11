@@ -1,0 +1,16 @@
+# Steem network configuration, defaults to the official blockchain
+steem_net:
+  node: 'https://api.steemit.com'
+  address_prefix: 'STM'
+  chain_id: '0000000000000000000000000000000000000000000000000000000000000000'
+# Steem settings configuration for the broadcaster
+steem_settings:
+  broadcast_account: steemdunk
+  posting_wif:
+  active_wif:
+  voting_power: 10000
+# SteemConnect 2 configuration
+steem_connect:
+  host: https://v2.steemconnect.com
+  redirect_uri: https://localhost:8443/callback
+  client_secret: # Application client secret

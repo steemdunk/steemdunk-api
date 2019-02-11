@@ -7,7 +7,7 @@ import {
   Entity,
   Column,
 } from 'typeorm';
-import { StringUtil } from 'steemdunk-common';
+import { StringUtil } from '../../util';
 import { User } from './user';
 import { Context } from 'koa';
 
