@@ -1,0 +1,12 @@
+Dockerfile
+
+package-lock.json
+node_modules
+out
+
+ormconfig.overrides*.js
+
+.vscode/launch.json
+.vscode/tasks.json
+.DS_Store
+*.log
