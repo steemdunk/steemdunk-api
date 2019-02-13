@@ -1,6 +1,12 @@
 FROM node:11-alpine
 WORKDIR /app
 
+ENV SD_API_HOST=0.0.0.0
+ENV SD_API_PORT=3001
+
+ENV SD_CONFIG=/data/config.yml
+ENV TYPEORM_OVERRIDES=/data/ormconfig.overrides.js
+
 RUN apk update && \
       apk upgrade && \
       apk add --no-cache \
@@ -14,4 +20,4 @@ COPY . .
 RUN yarn build
 
 EXPOSE 3001
-CMD ["yarn", "start"]
+CMD yarn start
