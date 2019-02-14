@@ -7,18 +7,23 @@ if (process.env.TYPEORM_OVERRIDES) {
   overridesPath = path.join(__dirname, 'ormconfig.overrides.js');
 }
 const overrides = require(overridesPath);
-const srcDir = process.env.NODE_ENV !== 'TEST' ? 'out' : 'src';
 
-module.exports = Object.assign({
+module.exports = Object.assign(overrides, {
   'type': 'postgres',
   'synchronize': false,
+  'migrationsRun': true,
+  'cli': {
+    'entitiesDir': 'src/db/entity',
+    'migrationsDir': 'src/db/migration',
+    'subscribersDir': 'src/db/subscriber'
+  },
   'entities': [
-    `${__dirname}/${srcDir}/db/entity/**/*{.ts,.js}`
+    `${__dirname}/out/db/entity/**/*.js`
   ],
   'migrations': [
-    `${__dirname}/${srcDir}/db/migration/**/*{.ts,.js}`
+    `${__dirname}/out/db/migration/**/*.js`
   ],
   'subscribers': [
-    `${__dirname}/${srcDir}/db/subscriber/**/*{.ts,.js}`
+    `${__dirname}/out/db/subscriber/**/*.js`
   ]
-}, overrides);
+});
