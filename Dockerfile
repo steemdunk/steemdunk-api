@@ -1,4 +1,4 @@
-FROM node:11-alpine
+FROM node:11.12.0-alpine
 WORKDIR /app
 
 ENV SD_API_HOST=0.0.0.0
