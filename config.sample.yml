@@ -11,6 +11,6 @@ steem_settings:
   voting_power: 10000
 # SteemConnect 2 configuration
 steem_connect:
-  host: https://v2.steemconnect.com
+  host: https://api.steemconnect.com
   redirect_uri: https://localhost:8443/callback
   client_secret: # Application client secret
